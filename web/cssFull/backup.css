@@ -1,0 +1,227 @@
+/*help classes*/
+.display_none {
+    display: none !important;
+}
+/*general*/
+/*
+@media (min-width: 300px){
+
+}
+@media (min-width: 768px) {
+
+}
+@media (min-width: 992px) {
+
+}
+@media (min-width: 1200px) {
+
+}
+*/
+
+/*@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic'); если проблемы появяться со шрифтом вставить эту строку*/
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+.none_outline,
+.none_outline:hover,
+.none_outline:active,
+.none_outline:link,
+.none_outline:checked,
+.none_outline:default,
+.none_outline:focus,
+.none_outline:visited {
+    outline: none
+}
+.transition_02,
+.transition_02:hover {
+    -webkit-transition: 0.2s linear;
+    -moz-transition: 0.2s linear;
+    -o-transition:  0.2s linear;
+    transition: 0.2s linear;
+}
+.mob_button.navbar-toggle {
+    border-color: #f0de86;
+    position: absolute;
+    top: 8px;
+    right:15px;
+    z-index: 999;
+}
+.mob_button .icon-bar {
+    background-color: #f0de86;
+}
+/*top bar*/
+#top_bar {
+    position: fixed;
+}
+.top_navigation nav  ul{
+    list-style-type: none;
+}
+.top_navigation .main_menu  li a {
+    color:#edda80;
+    text-decoration: none;
+}
+.top_navigation .main_menu > li > a.collapsed.list_catalog {
+    background-color: transparent;
+}
+.top_navigation .main_menu > li > a:hover, .top_navigation .main_menu > li > a.list_catalog, .top_navigation .main_menu > li > a.collapsed.list_catalog:hover {
+    background-color: rgba(236, 217, 126, 0.1);
+}
+#collapseMenu_1 {
+    z-index: 9999;
+    width: 100%;
+    left: 0;
+}
+#collapseMenu_1 li {
+    display: list-item;
+}
+#collapseMenu_1 a {
+    display: block;
+}
+.general_navigation {
+    background-color: #f0de86;
+}
+
+/**/
+@media (min-width: 300px){
+    #top_bar {
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #1c1c1c;
+    }
+    .main_menu.collapse {
+        display: none;
+    }
+    .main_menu.collapse.in {
+        display: block;
+    }
+    .top_navigation nav{
+        overflow-y: auto;
+        max-height: 100vh;
+        float: none;
+    }
+    .top_navigation nav  ul {
+        text-align: left;
+        padding:0;
+        margin: 0;
+        list-style-type: none;
+    }
+    .top_navigation .main_menu  li {
+        display: list-item;
+    }
+    .top_navigation .main_menu  li a {
+        padding: 19px 15px;
+        font-size: 13px;
+        display: block;
+    }
+    #collapseMenu_1 {
+        position:relative;
+    }
+    .ver_2_sub_menu {
+        -moz-column-count: 1;
+        -webkit-column-count: 1;
+        column-count: 1;
+        column-fill: auto;
+    }
+    #collapseMenu_1 ul {
+        background-color: rgba(236, 217, 126, 0.1);
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    #collapseMenu_1 li {
+        margin-bottom: 25px;
+    }
+    #collapseMenu_1 a {
+        padding: 0 5px 0 15px;
+        line-height: 30px;
+        color:#eedb82;
+    }
+    #menu_img_cat {
+        max-height: 287px;
+        padding-top: 30px;
+        max-width: 100%;
+    }
+    .general_cat {
+        margin-bottom:14px;
+    }
+    #collapseMenu_1 a:hover {
+        opacity: 0.7;
+        text-indent: 5px;
+        padding-right:0;
+    }
+    .general_navigation {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
+@media (min-width: 768px) {
+    #top_bar {
+        background-color: transparent;
+    }
+    .main_menu.collapse {
+        display: block;
+    }
+    .top_navigation nav {
+        overflow-y: hidden;
+        height: auto;/* надо ли?*/
+        float: left;
+    }
+    .top_navigation nav  ul {
+        background-color: transparent;
+    }
+    .top_navigation .main_menu  li {
+        display: inline-block;
+    }
+    .top_navigation .main_menu  li a {
+        display: inline-block;
+    }
+    #collapseMenu_1 {
+        position:absolute;
+        background-color: #eedb82;
+    }
+    .ver_2_sub_menu {
+        -moz-column-count: 3;
+        -webkit-column-count: 3;
+        column-count: 3;
+        column-fill: auto;
+    }
+    #collapseMenu_1 ul {
+        padding-top: 55px;
+        padding-bottom: 55px;
+    }
+    #collapseMenu_1 li {
+        margin-bottom: 40px;
+    }
+    #collapseMenu_1 a {
+        color:#1a1b1b;
+        padding: 0 5px 0 0;
+        line-height: 22px;
+    }
+}
+
+/*style for main page*/
+/*header*/
+header {
+    background: url('../img/site/mainPage/header.jpg') top center no-repeat;
+    background-size: contain;
+    width:100%;
+    height: 920px;
+}
+@media (min-width: 300px){
+    header {
+        height: 920px;
+    }
+}
+@media (min-width: 768px) {
+
+}
+@media (min-width: 992px) {
+
+}
+@media (min-width: 1200px) {
+
+}
+@media (min-width: 1920px) {
+
+}

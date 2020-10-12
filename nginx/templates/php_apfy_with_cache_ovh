@@ -1,0 +1,42 @@
+# Передаём обработку PHP-скриптов PHP-FPM
+location ~ \.php$ {
+	# „иректив limit_req может быть несколько || пока не работает над подумать?
+	#limit_req   zone=flood;
+	
+	try_files $uri =404; 
+	#PHP-FPM слушает на Unix сокете
+	fastcgi_pass   127.0.0.1:9007;
+	
+	#Использовать cache зона one
+	fastcgi_cache  one;
+	
+	#Помещать страницу в кеш, после 3-х использований. Меньшее число вызвало у меня труднообъяснимые глюки
+	# на формах регистрации
+	fastcgi_cache_min_uses 9;
+	#Кешировать перечисленные ответы
+	fastcgi_cache_valid 301 302 304 5m;
+	#Формат ключа кеша - по этому ключу nginx находит правильную страничку
+	fastcgi_cache_key "$request_method|$host|$request_uri";
+	
+	#Если не использовать эту опцию - то в форумах все будут сидеть под именем первого вошедшего на форум
+	#fastcgi_hide_header "Set-Cookie";
+	
+	#Этот запрос заставит nginx кешировать все что проходит через него
+	fastcgi_ignore_headers "Cache-Control" "Expires";
+	fastcgi_index  index.php;
+	
+	#  fastcgi_intercept_errors on; # только на период тестирования
+	# Включаем параметры из /etc/nginx/fastcgi_param_apfy
+	include fastcgi_params;
+	#fastcgi_param HTTPS on;
+	# Путь к скрипту, который будет передан в php-fpm
+	fastcgi_param       SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+	fastcgi_ignore_client_abort     off;
+	
+}
+#возможные расширениЯ шрифтов - otf|ttf|svg|woff|woff2|eot
+#server {
+	#location ~* ^.+\.(rss|atom|jpg|jpeg|gif|png|ico|rtf|js|css|otf|ttf|svg|woff|woff2|eot)$ {
+	#	expires max;
+	#}
+#}

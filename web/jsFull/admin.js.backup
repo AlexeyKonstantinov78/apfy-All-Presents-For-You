@@ -1,0 +1,124 @@
+function urlRusLat(str) {
+	str = str.toLowerCase(); // все в нижний регистр
+		var cyr2latChars = {
+				'а':'a','б':'b','в':'v','г':'g',
+				'д':'d','е':'e','ё':'yo','ж':'zh','з':'z',
+				'и':'i','й':'y','к':'k','л':'l',
+				'м':'m','н':'n','о':'o','п':'p','р':'r',
+				'с':'s','т':'t','у':'u','ф':'f',
+				'х':'h','ц':'c','ч':'ch','ш':'sh','щ':'shch',
+				'ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+				' ':'-'
+		};
+
+    var newStr = new String();
+
+    for (var i = 0; i < str.length; i++) {
+
+		if(cyr2latChars[str[i]] !== undefined)
+        newStr += cyr2latChars[str[i]];
+		else newStr += str[i];
+
+    }
+    // ”дал¤ем повтор¤ющие знаки - »менно на них замен¤ютс¤ пробелы.
+    // “ак же удал¤ем символы перевода строки, но это наверное уже лишнее
+    return newStr.replace(/[_]{2,}/gim, '_').replace(/\n/gim, '');
+}
+
+// id = key node tree. m = up \ down
+function movenode(id,m){
+	var Node = $("#tree").fancytree("getTree").getNodeByKey(id);
+	var Parents = Node.getParent().getChildren();
+	var countp = Parents.length;
+	var NodeIndex = Node.getIndex();
+	
+	if(m == 'up'){
+		if(NodeIndex == 0 || countp < 2) return;
+		Node.moveTo(Parents[NodeIndex-1],'before');
+	} else {
+		if(NodeIndex == countp - 1 || countp < 2) return;
+		Node.moveTo(Parents[NodeIndex+1],'after');
+	}
+	
+}
+
+function deletenode() {
+		$("#tree").fancytree("getActiveNode").remove();
+		$.post(action); 
+	}
+
+function addnode(root){
+	if(root)
+		var Node = $("#tree").fancytree("getTree").getNodeByKey(root);
+	else 
+		var Node = $("#tree").fancytree("getRootNode");
+	
+	$.post('/admin/shop/category/addchild', {"name": "Новая категория", "parent_id":root}, function(data) {
+		Node.addChildren({
+			title: "Новая категория",
+			key: data.id,
+			folder: true
+		});
+		Node.setExpanded(true);
+	});
+	
+}
+	
+
+$(document).ready(function(){
+
+	$('input.name_slug').on('keyup', function(){
+		
+		$('#seotags-slug').val(urlRusLat($(this).val()));
+	})
+	
+	
+	$(function(){
+		   $(document).on('click', '.showModalButton', function(){
+			if ($('#modal').data('bs.modal').isShown) {
+				$('#modal').find('#modalContent')
+						.load($(this).attr('value'));
+				$('#modalHeader').find('h4').remove();
+				$('<h4>' + $(this).attr('title') + '</h4>').appendTo('#modalHeader');
+
+			} else {
+				$('#modal').modal('show')
+						.find('#modalContent')
+						.load($(this).attr('value'));
+				$('#modalHeader').find('h4').remove();
+				$('<h4>' + $(this).attr('title') + '</h4>').appendTo('#modalHeader');
+			}
+		});
+	});
+	
+	
+	
+	$('#model-form').on('beforeSubmit', function () {  return false; })
+	//добавление и удаление атрибутов
+	$(function(){
+		var m=$('#attr .form-inline.form-group:last').data('mas');
+		var last_id = $("#attr .del_attr:last").data('del');
+		$("#attr").on('click', '.del_attr', function(){
+			var obj = $(this);
+			if(obj.parent().find('input[type=hidden]')){
+				obj.parent().remove();
+				return true;
+			}
+			$.post( "/admin/shop/product/delattributelist", { id: obj.data('del')}, function(){
+				obj.parent().remove();
+			});
+		});
+		$('#add_attrebute').on('click', function(){
+			++last_id;
+			var p = $('#add_attrebute').parent();
+			var text = p.find('select option:selected').text();
+			var id = p.find('select').val();
+			var tmp = $('<div class="form-inline form-group field-productattributeslist-'+m+'-value required has-success"><label class="control-label" for="productattributeslist-'+m+'-value">'+text+':</label> <input type="text" id="productattributeslist-'+m+'-value" class="form-control" name="ProductAttributesList['+m+'][value]" value=""><input type="hidden" id="productattributeslist-'+m+'-value" class="form-control" name="ProductAttributesList['+m+'][attr_id]" value="'+id+'"> <label class="control-label btn btn-default del_attr" type="submit" data-del="'+last_id+'"><i class="fa fa-trash-o" aria-hidden="true"></i> Удалить?</label>		<div class="help-block"></div></div>');
+			m++;
+			tmp.appendTo('#attr');
+		});
+	})	
+})
+
+	
+

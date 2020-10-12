@@ -1,0 +1,181 @@
+<?php
+namespace app\behaviors;
+use Yii;
+use yii\db\ActiveRecord;
+use app\models\Images;
+use yii\base\Model;
+
+class ImageBehavior extends \yii\base\Behavior
+{
+    private $_model;
+    public function events()
+    {
+        return [
+            ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
+            ActiveRecord::EVENT_AFTER_UPDATE => 'afterUpdate',
+            ActiveRecord::EVENT_AFTER_DELETE => 'afterDelete',
+        ];
+    }
+    public function afterInsert()
+    {
+        if($this->Images->load(Yii::$app->request->post())){
+            if(!$this->Images->isEmpty()){
+				//$this->Images->user_id = $this->owner->user_id;
+				//$this->Images->object_id = $this->owner->id;					
+                $this->Images->save();
+            }
+        }
+    }
+	//TOLOOK
+    public function afterUpdate()
+    {
+		//$i = 0;
+		//добавляем новые картинки
+		//var_dump(Yii::$app->request->post());
+		//exit();
+		
+		
+		
+		//exit();
+		//*
+		if (isset($this->Images) && Images::loadMultiple($this->Images, Yii::$app->request->post()) && Images::validateMultiple($this->Images)) {
+            foreach ($this->Images as $key => $image) {
+				$id_old = $image->id;
+				$post = Yii::$app->request->post()['Images'];
+				/*
+				$arr_filter = function () use ($post_images, $id_old) {
+					foreach($post_images as $key => $value){
+						if(isset($post_images['id']) && $value['id'] == $id_old) {
+							$res = true;
+						}
+						else {
+							$res = false;
+						}
+					}
+					return $res;
+				};
+				var_dump($arr_filter());
+				//*/
+				/*
+				$arr_filter = array_filter(Yii::$app->request->post()['Images'], function ($v, $k) {
+					if(isset($v['id']) && $v['id'] == $id_old) {
+						$id_old = true;
+					}
+					else {
+						$id_old = false;
+					}
+					return $id_old;
+				});
+				var_dump(array_filter(Yii::$app->request->post()['Images'], function ($v, $k) {
+					if(isset($v['id']) && $v['id'] == $id_old) {
+						$id_old = true;
+					}
+					else {
+						$id_old = false;
+					}
+					return $id_old;
+				}));
+				*/
+				$array_out = array_filter($post, function($p) use($id_old) {
+					if(isset($p['id']) && $p['id'] == $id_old) {
+						$res = true;
+					} else {
+						$res = false;
+					}					
+					return $res; //in_array($var, $image) ? true : false;
+				});
+				
+				if(isset($array_out)){
+					$image->save();
+				} 
+            }
+			
+        }
+		
+		
+		foreach(Yii::$app->request->post('Images') as $k => $v){
+			if(array_key_exists('id', $v)){
+				//$model_image = $this->findModelImage($v['id']);
+				
+				/*$model_image = $this->findModelImage($v['id']);
+				
+				/*
+				$model_image->load($v); 
+				$model_image->save();
+				//*/
+				
+				/*
+				if ($model_image->validate($v) && $model_image->load($v) && $model_image->save()) echo 'Ура 1' . var_dump($v);
+				else echo 'Плохо 1' . var_dump($v);
+				//*/
+				/*
+				echo '<br><br><br>';
+				echo '<br><br><br>' . var_dump($v['title']);
+				echo '<br><br><br>' . var_dump($model_image->title);
+				exit();
+				*/
+				//*
+			} else {
+				//var_dump($v);
+				$model_image = new Images();
+				$model_image->title = $v['title'];
+				$model_image->alt = $v['alt'];
+				$model_image->image = $v['image'];
+				$model_image->object = substr(strrchr(get_class($this->owner), "\\"), 1);
+				$model_image->object_id = $this->owner->id;
+				
+				$model_image->save();
+				//unset(Yii::$app->request->post('Images')[$k]);
+				/*
+				if ($model_image->save()) echo 'Ура 2' . var_dump($v);
+				else echo 'Плохо 2' . var_dump($v);
+				*/
+				//*
+			}
+			
+			
+			//$i++;
+		}
+    }
+	
+    public function afterDelete()
+    {
+		
+		
+        if(!$this->Images->isNewRecord){
+			//Images::deleteAll(['object_id' => $this->owner->id, 'object'=> substr(strrchr(get_class($this->owner), "\\"), 1)]);
+            $this->Images->delete();
+        }
+    }
+    public function getImgs()
+    {  
+        return $this->owner->hasMany(Images::className(), ['object_id' => $this->owner->primaryKey()[0]])->where(['object' => substr(strrchr(get_class($this->owner), "\\"), 1)])->orderBy(['id'=>SORT_ASC]);
+    }
+    public function getImages()
+    {
+        if(!$this->_model)
+        {
+            $this->_model = $this->owner->imgs;
+            if(!$this->_model){
+                $this->_model = new Images([
+                    'object' => substr(strrchr(get_class($this->owner), "\\"), 1),
+                    'object_id' => $this->owner->primaryKey
+                ]);
+            }
+        }
+        return $this->_model;
+    }
+	public function getImg(){
+		return $this->owner->hasone(Images::className(), ['object_id' => $this->owner->primaryKey()[0]])->where(['object' => substr(strrchr(get_class($this->owner), "\\"), 1), 'is_main'=>'1']);
+	}
+	
+	
+	protected function findModelImage($id)
+    {
+        if (($model = Images::find()->where(['id' => $id])->one()) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+}

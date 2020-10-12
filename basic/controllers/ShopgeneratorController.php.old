@@ -1,0 +1,912 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: straengel
+ * Date: 13.04.2018
+ * Time: 15:16
+ */
+
+namespace app\controllers;
+use Yii;
+use yii\web\Controller;
+use yii\helpers\ArrayHelper;
+use app\modules\shop\models\Category;
+use app\modules\shop\models\Product;
+use app\modules\shop\models\ProductInCategory;
+use app\models\Images;
+
+class ShopgeneratorController extends Controller
+{
+    private function getCatsBrands(){
+        $category = new Category();
+        $brands = $category->getLastCatsBrand();
+        $lastCatBrands = [];
+        $deleteNew = [
+            '392',
+            '426',
+            '886',
+            '878',
+            '930',
+            '1063',
+        ];
+        foreach ($brands as $k=>$v){
+            if(in_array($v->id, $deleteNew)) Continue;
+            if($v->isLeaf() !== false)
+                $lastCatBrands[$v->id] = $v->name;
+            else
+                $lastCatBrands = $lastCatBrands+$category->getLastChild($v->children);
+        }
+        return $lastCatBrands;
+    }
+
+    public function actionYml()
+    {
+
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(86);
+
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+
+        $products_ymlAr = [];
+        foreach ($products as $k=>$v){
+            //ищем брэнд
+
+            foreach ($v['categories'] as $k1=>$v1){
+
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    Break;
+                }
+            }
+            //ищем последнюю категорию
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            $products = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $lastCat = $v2['id'];
+                        break;
+                    } else {
+
+                    }
+                }
+                Yii::$app->cache->set('lastCatProduct'.$v['id'], $lastCat, 1000);
+            }
+
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'price' => $v['price'],
+                'discount_price' => $v['discount_price'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'gtin' => $v['gtin'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+//        var_dump($products_yml);
+//        exit;
+        $products_yml = $products_ymlAr;
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+
+//        return $this->renderPartial('yml', [
+//            'treeCat' => $treeCat,
+//            'products_yml' => $products_yml,
+//        ]);
+        $data = $this->renderPartial('yml', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        $src = '/var/www/apfy.ru/web/yandex1.xml';
+        file_put_contents($src, $data);
+        $src = '/var/www/apfy.ru/web/yandex.xml';
+        file_put_contents($src, $data);
+        return $this->goHome();
+    }
+
+    //написать программу, которая будет создавать папки и копировать туда изображения, которые уже обжаты
+    public function actionImages()
+    {
+        $models = Images::find()->asArray()->limit(50)->where(['object'=>'Category', ])->all();
+        if(isset($_GET['deb']))
+            return $this->render('images', [
+                'models' => $models,
+            ]);
+        else
+            return $this->goHome();
+    }
+
+    public function actionPrice()
+    {
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(86);
+
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+
+        $products_ymlAr = [];
+        foreach ($products as $k=>$v){
+            //ищем брэнд
+
+            foreach ($v['categories'] as $k1=>$v1){
+
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    Break;
+                }
+            }
+            //ищем последнюю категорию
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            $products = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $lastCat = $v2['id'];
+                        break;
+                    } else {
+
+                    }
+                }
+                Yii::$app->cache->set('lastCatProduct'.$v['id'], $lastCat, 1000);
+            }
+
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'discount_price' => $v['discount_price'],
+                'price' => $v['price'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'gtin' => $v['gtin'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+       
+        $products_yml = $products_ymlAr;
+
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+		/*
+        return $this->renderPartial('price', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+		//*/
+		//*
+        $data = $this->renderPartial('price', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+		
+        $src = '/var/www/apfy.ru/web/price.xml';
+        file_put_contents($src, $data);
+        return $this->goHome();
+		//*/
+		
+    }
+
+    public function actionMarket()
+    {
+
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(584);
+
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+//        var_dump($products);
+//        exit;
+        $products_ymlAr = [];
+
+        $idCategory = array('903', '896', '898', '898', '850');
+        $idProducts =  array("2687", "2688", "2689", "2690", "2691", "4019", "4289", "4290", "4291", "4292", "4293", "4294", "4295", "4296", "4297", "4298", "4299", "4300", "4301", "4302", "4303", "4304", "4305", "4306", "4307", "4308", "4309", "4310", "4311", "4312", "5048", "5049", "5050", "5051", "5052", "5215", "5216", "5217", "5218", "5219", "5305", "5306", "5307", "5308", "5315", "5316", "5317", "5318", "5319", "5320", "5321", "5322", "5323", "5324", "5325", "5326", "5327", "5328", "5329", "5330", "5331", "5332", "5333", "5334", "5335", "5336", "5337", "5338", "5339", "5340", "5341", "5342", "5343", "5344", "5345", "5346", "5347", "5348", "5349", "5350", "5351", "5352", "5353", "5354", "5355", "5356",   );
+        foreach ($products as $k=>$v){
+
+            if(in_array($v['id'], $idProducts)) Continue;
+            $product_test = [];
+            foreach ($v['categories'] as $k1=>$v1){
+                $product_test[] = $v1['id'];
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    //Break;
+                }
+            }
+            if(!in_array(584,$product_test) )
+                Continue;
+            //ищем последнюю категорию
+            //$lastCatBrands проблеема в последних категориях, с ними что то не так
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            //$products = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $lastCat = $v2['id'];
+                        break;
+                    } else {
+
+                    }
+                }
+                Yii::$app->cache->set('lastCatProduct'.$v['id'], $lastCat, 1000);
+            }
+
+            if(in_array($lastCat,$idCategory )) Continue;
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'price' => $v['price'],
+                'discount_price' => $v['discount_price'],
+                'gtin' => $v['gtin'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+//        var_dump($products_yml);
+//        exit;
+        $products_yml = $products_ymlAr;
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+
+//        return $this->renderPartial('market', [
+//            'treeCat' => $treeCat,
+//            'products_yml' => $products_yml,
+//        ]);
+        $data = $this->renderPartial('market', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        $src = '/var/www/apfy.ru/web/marketBags.xml';
+        file_put_contents($src, $data);
+        return $this->goHome();
+    }
+    //
+    public function actionMarketpen()
+    {
+        //https://apfy.ru/marketPen.xml
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(193);
+
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+//        var_dump($products);
+//        exit;
+        $products_ymlAr = [];
+
+        $idCategory = array('903', '896', '898', '898', '850');
+        $idProducts =  array("2687", "2688", "2689", "2690", "2691", "4019", "4289", "4290", "4291", "4292", "4293", "4294", "4295", "4296", "4297", "4298", "4299", "4300", "4301", "4302", "4303", "4304", "4305", "4306", "4307", "4308", "4309", "4310", "4311", "4312", "5048", "5049", "5050", "5051", "5052", "5215", "5216", "5217", "5218", "5219", "5305", "5306", "5307", "5308", "5315", "5316", "5317", "5318", "5319", "5320", "5321", "5322", "5323", "5324", "5325", "5326", "5327", "5328", "5329", "5330", "5331", "5332", "5333", "5334", "5335", "5336", "5337", "5338", "5339", "5340", "5341", "5342", "5343", "5344", "5345", "5346", "5347", "5348", "5349", "5350", "5351", "5352", "5353", "5354", "5355", "5356",   );
+        foreach ($products as $k=>$v){
+
+            if(in_array($v['id'], $idProducts)) Continue;
+            $product_test = [];
+            foreach ($v['categories'] as $k1=>$v1){
+                $product_test[] = $v1['id'];
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    //Break;
+                }
+            }
+            if(!in_array(193,$product_test) )
+                Continue;
+            //ищем последнюю категорию
+            //$lastCatBrands проблеема в последних категориях, с ними что то не так
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            $products = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $lastCat = $v2['id'];
+                        break;
+                    } else {
+
+                    }
+                }
+                Yii::$app->cache->set('lastCatProduct'.$v['id'], $lastCat, 1000);
+            }
+
+            if(in_array($lastCat,$idCategory )) Continue;
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'price' => $v['price'],
+                'discount_price' => $v['discount_price'],
+                'gtin' => $v['gtin'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+//        var_dump($products_yml);
+//        exit;
+//        var_dump($treeCat);
+//        exit;
+        $products_yml = $products_ymlAr;
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+
+//        return $this->renderPartial('market', [
+//            'treeCat' => $treeCat,
+//            'products_yml' => $products_yml,
+//        ]);
+        $data = $this->renderPartial('marketPen', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        $src = '/var/www/apfy.ru/web/marketPen.xml';
+        file_put_contents($src, $data);
+        return $this->goHome();
+    }
+    //
+    public function actionMarketpenall()
+    {
+        //https://apfy.ru/marketPen.xml
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(191);
+		//var_dump($treeCat); exit;
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+//        var_dump($products);
+//        exit;
+        $products_ymlAr = [];
+
+        $idCategory = array();
+        $idProducts =  array( );
+        foreach ($products as $k=>$v){
+
+            if(in_array($v['id'], $idProducts)) Continue;
+            $product_test = [];
+            foreach ($v['categories'] as $k1=>$v1){
+                $product_test[] = $v1['id'];
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    //Break;
+                }
+            }
+            if(!in_array(191,$product_test) ) Continue;
+            //ищем последнюю категорию
+            //$lastCatBrands проблеема в последних категориях, с ними что то не так
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            $products = false; //отключить кеш
+            if ($lastCat === false) {
+                $catIdMain = ProductInCategory::getCategoryProperty($v['id'], 1);
+				if($catIdMain == null) continue;
+				//var_dump($catIdMain['id_category']); exit;
+				$lastCat = $catIdMain['id_category'];
+                Yii::$app->cache->set('lastCatProduct'.$v['id'], $catIdMain['id_category'], 1000);
+            }
+			
+            if(in_array($lastCat,$idCategory )) Continue;
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'price' => $v['price'],
+                'discount_price' => $v['discount_price'],
+                'gtin' => $v['gtin'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+//        var_dump($products_yml);
+//        exit;
+//        var_dump($treeCat);
+//        exit;
+        $products_yml = $products_ymlAr;
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+		/*
+		return $this->renderPartial('marketPenAll', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+		//*/
+        $data = $this->renderPartial('marketPenAll', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        $src = '/var/www/apfy.ru/web/marketAllPen.xml';
+		
+		//echo $data; exit;
+        file_put_contents($src, $data);
+        return $this->goHome();
+    }
+	
+    public function actionRegmarkets()
+    {
+
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(86);
+
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+//        var_dump($products);
+//        exit;
+        $products_ymlAr = [];
+
+        $idCategory = array('193', '196', '1007', '586'); //Parker, Waterman, Piquadro, Wenger - категории которые пока добавяться
+        $idProducts =  array();
+        foreach ($products as $k=>$v){
+
+            if($v['price'] < 500) Continue;
+            if(in_array($v['id'], $idProducts)) Continue;
+            $product_test = [];
+            foreach ($v['categories'] as $k1=>$v1){
+                $product_test[] = $v1['id'];
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    $brandId = $v1['id'];
+                    //Break;
+                }
+            }
+            //if(!in_array(86,$product_test) )
+                //Continue;
+            //ищем последнюю категорию
+            //$lastCatBrands проблеема в последних категориях, с ними что то не так
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            //$products = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $lastCat = $v2['id'];
+                        break;
+                    } else {
+
+                    }
+                }
+                Yii::$app->cache->set('lastCatProduct'.$v['id'], $lastCat, 1000);
+            }
+
+            //if(!in_array($brandId,$idCategory )) Continue; //ограничение по брендам, если такого бренда нет, то след, в дальнейшем просто закоментить
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'price' => $v['price'],
+                'discount_price' => $v['discount_price'],
+                'gtin' => $v['gtin'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+        //var_dump($products_yml);
+		//echo count($products_ymlAr);
+        //exit;
+        $products_yml = $products_ymlAr;
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+
+//        return $this->renderPartial('market', [
+//            'treeCat' => $treeCat,
+//            'products_yml' => $products_yml,
+//        ]);
+        $data = $this->renderPartial('market', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        $src = '/var/www/apfy.ru/web/regmarkets.yml';
+        file_put_contents($src, $data);
+        return $this->goHome();
+    }
+
+    //Предложения только ручки в прайс для других регионов, пока только ручки
+    public function actionPriceregions()
+    {
+
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(191);
+
+//получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+
+        $products_ymlAr = [];
+        foreach ($products as $k=>$v){
+            $product_test = [];
+            foreach ($v['categories'] as $k1=>$v1){
+                $product_test[] = $v1['id'];
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    //Break;
+                }
+            }
+            if(!in_array(191,$product_test) )
+                Continue;
+            //ищем последнюю категорию
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            //$products = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $lastCat = $v2['id'];
+                        break;
+                    } else {
+
+                    }
+                }
+                Yii::$app->cache->set('lastCatProduct'.$v['id'], $lastCat, 1000);
+            }
+
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'gtin' => $v['gtin'],
+                'price' => $v['price'],
+                'discount_price' => $v['discount_price'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+
+        $products_yml = $products_ymlAr;
+
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+        /*
+        return $this->renderPartial('price', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        //*/
+        //*
+        $data = $this->renderPartial('priceCentr', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+
+        $src = '/var/www/apfy.ru/web/priceOtherRegion.xml';
+        file_put_contents($src, $data);
+        return $this->goHome();
+        //*/
+    }
+
+    //Выгрузка в google
+    public function actionGoogle()
+    {
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(86);
+
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        //$lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+
+
+        $products = Product::find()->with(['seo', 'categories', 'imagess'])->where(['active'=>1])->asArray()->all();
+
+        $products_ymlAr = [];
+        foreach ($products as $k=>$v){
+            //ищем брэнд
+            $brand = '';
+            foreach ($v['categories'] as $k1=>$v1){
+
+                if($v1['is_brand'] == 1){
+                    $brand = $v1['name'];
+                    Break;
+                }
+            }
+            //ищем последнюю категорию
+            $lastCat = Yii::$app->cache->get('lastCatProductName'.$v['id']);
+            //$lastCat = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $lastCat = $v2['name'];
+                        break;
+                    }
+                }
+                Yii::$app->cache->set('lastCatProductName'.$v['id'], $lastCat, 1000);
+            }
+			/*
+			if(!empty($v['discount_price']) && $v['discount_price']>1){
+				var_dump($v['discount_price']);
+				var_dump($v['price']);
+				exit;
+			}
+			//*/
+            $products_ymlAr[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'discount_price' => (int)$v['discount_price'],
+                'price' => (int)$v['price'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'gtin' => $v['gtin'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+            if($brand == 'Parker') $products_ymlArParker[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'discount_price' => (int)$v['discount_price'],
+                'price' => (int)$v['price'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'gtin' => $v['gtin'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+            if($brand == 'Waterman') $products_ymlArWaterman[] = [
+                'id' => $v['id'],
+                'name' => $v['name'],
+                'slug' => $v['seo']['slug'],
+                'discount_price' => (int)$v['discount_price'],
+                'price' => (int)$v['price'],
+                'img' => $v['imagess']['image'],
+                'artid' => $v['artid'],
+                'gtin' => $v['gtin'],
+                'description' => $v['description'],
+                'category' => $lastCat,
+                'brand' => $brand
+            ];
+        }
+
+        $products_yml = $products_ymlAr;
+
+        //создание файла
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+        /*
+        return $this->renderPartial('price', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        //*/
+        //*
+        //Весь список
+        $data = $this->renderPartial('google', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_yml,
+        ]);
+        $src = '/var/www/apfy.ru/web/google.xml';
+        file_put_contents($src, $data);
+
+        //Только брэнд паркера
+        $data = $this->renderPartial('google', [
+            'treeCat' => $treeCat,
+            'products_yml' => $products_ymlArParker,
+        ]);
+        $src = '/var/www/apfy.ru/web/googleParker.xml';
+        file_put_contents($src, $data);
+//
+//        //Только брэнд Waterman
+//        $data = $this->renderPartial('google', [
+//            'treeCat' => $treeCat,
+//            'products_yml' => $products_ymlArWaterman,
+//        ]);
+//        $src = '/var/www/apfy.ru/web/googleWaterman.xml';
+//        file_put_contents($src, $data);
+
+        return $this->goHome();
+        //*/
+
+    }
+	
+	public function actionChange()
+    {
+
+
+        //вывод категорий
+        $category = new Category();
+        $treeCat = $category->generateTreeCatParent(86);
+
+
+        //получение товаров
+        //получение всех последних категорий брэндов
+        $lastCatBrands = Yii::$app->cache->get('lastCatBrands');
+        $lastCatBrands = false;
+        if ($lastCatBrands === false) {
+            $lastCatBrands = $this->getCatsBrands();
+            Yii::$app->cache->set('lastCatBrands', $lastCatBrands, 10000);
+        }
+
+        //var_dump($lastCatBrands);
+        //exit;
+        //первый отбор
+        /*$products = Product::find()->with(['categories'])->asArray()->all();
+        foreach ($products as $k=>$v){
+            //ищем последнюю категорию
+            $lastCat = Yii::$app->cache->get('lastCatProduct'.$v['id']);
+            $products = false; //отключить кеш
+            if ($lastCat === false) {
+                foreach ($v['categories'] as $k2=>$v2){
+                    if (array_key_exists($v2['id'], $lastCatBrands)) {
+                        $modelProdInCat = ProductInCategory::find()->where(['id_product'=>$v['id'], 'id_category' => $v2['id']])->one();
+                        if($modelProdInCat->property == null){
+                            $modelProdInCat->property = 1;
+                            $modelProdInCat->save();
+                        }
+                    }
+                }
+                //exit;
+                //Yii::$app->cache->set('lastCatProduct'.$v['id'], $lastCat, 1000);
+            }
+
+        }
+        echo 'готово 1';
+        exit;*/
+
+        //второй отбор
+        /*$products = Product::find()->with(['categories'])->asArray()->all();
+        $arr = [];
+        foreach ($products as $k=>$v){
+            $productInCat = ProductInCategory::find()->where(['id_product' => $v['id'],'property'=>1])->asArray()->all();
+            //$productInCat = ProductInCategory::find()->where(['id_product' => $v['id']])->asArray()->all();
+
+            if(count($productInCat)>1){
+                array_shift($productInCat);
+                foreach ($productInCat as $k=>$v){
+                    $changeLast = ProductInCategory::findOne($v['id']);
+                    if($changeLast->property !== 1) Continue;
+                    $changeLast->property = 0;
+                    $changeLast->save();
+
+                }
+            }
+        }
+        echo 'готово 2';
+        exit;*/
+
+        //третий отбор
+        /*$arr = [];
+        $products = Product::find()->with(['categories'])->asArray()->all();
+        foreach ($products as $k=>$v){
+            //$productInCat = ProductInCategory::find()->where(['id_product' => $v['id'],'property'=>0])->asArray()->all();
+            $productInCat = ProductInCategory::find()->where(['id_product' => $v['id'], 'property' => 1])->asArray()->all();
+//            $arr[]= $productInCat;
+            if(count($productInCat)<1){
+                $arr[$v['id']] = $v['name'];
+                continue;
+            }
+        }
+        var_dump($arr);
+        echo 'готово 3';
+        exit;*/
+        /*
+         *  [4811]=> string(108) "Подарочная коробка для 1-2-х ручек Carandache Office 849 (9200.200) красная" [5150]=> string(75) "Термос Thermos THERMOcafe HAMMP-1200-HT 1,2 л. (725370) черный"
+         * */
+    }
+}
+/*
+<description>
+                        <![CDATA[
+                            < ? =$v['description']? >
+]]>
+</description>*/

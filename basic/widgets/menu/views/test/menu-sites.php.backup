@@ -1,0 +1,380 @@
+222222222222222222222222
+<?php
+/**
+ * Created by PhpStorm.
+ * User: straengel
+ * Date: 06.03.2017
+ * Time: 6:15
+ */
+use yii\helpers\Html;
+?>
+<?php //First
+	function treeMainItems($cat, $max_level) {
+		$max_level--;
+		$data = "";
+		if($max_level > 0) {
+
+            $data .= "\n \t \t"."<ul>"."\n";
+			foreach($cat as $c){
+                $data .= "\t \t \t"."<li >"."\n";
+                $data .= "\t \t \t \t";
+				if(!$c->isLeaf()) $data .= Html::tag('span', $c->name, ['class' => 'multi-column__title']); //загаловок категории
+				else $data .= Html::a($c->name,'/category/'.($c->seoTags->slug == null ? $c->id : $c->seoTags->slug), ['class' => '']); //ссыЛка не категории
+                $data .= "\n";
+                /*
+                echo "\n";
+                echo "\t";
+                echo $max_level;
+                echo "\t";
+                echo $c->name;
+                echo "\t";
+                var_dump($c->isLeaf());
+                echo "\n";
+                echo "\n";
+                /*
+                echo "\n\n\t\t\t";
+                var_dump($c->isLeaf());
+                echo "\t\t\t". $max_level . "\n\n";
+                */
+                //*
+                //var_dump($c['children']);
+				if(!$c->isLeaf()) {
+					$data .= treeMainItems($c['children'], $max_level );
+                    //echo "<plaintext>" . $max_level . "</plaintext>";
+                    //exit();
+				}
+                /**/
+                $data .= "\n";
+				$data .= "\t \t \t"."</li>"."\n";
+			}
+            $data .= "\t \t"."</ul>"."\n";
+		}
+		return $data;
+	}
+
+	$activeLink = isset(Yii::$app->params['breadcrumbs'][1]['url'][0]) ? Yii::$app->params['breadcrumbs'][1]['url'][0] : '';
+
+	if(empty($activeLink)) $activeLink = "/category/".Yii::$app->request->get("slug");
+
+	$max_level = 3;
+
+
+    /* Cache items
+    $items = Yii::$app->cache->get('items');
+    if ($items === false) {
+        $items = "";
+        foreach($tree as $cat)
+        {
+            $items .= "<li>";
+            $items .= "<ul>";
+
+            if(!$cat->isLeaf()) $items .= "<li >".Html::tag('span', $cat->name, ['class' => 'multi-column__title']); //загаловок категории
+            else $items .= "<li >".Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //ссыЛка не категории
+
+            $items .= treeMainItems($cat['children'], $max_level);
+
+            $items .= "</ul>";
+            $items .= "</li>";
+        }
+        Yii::$app->cache->set('items', $items, 1000);
+    }
+	//var_dump($tree);
+	//exit();
+    // end cache items */
+    /* NOCache items */
+    $items = "\n".'<ul id="collapseMenu_1" class="multi-column multi-column_my collapse">'."\n";
+
+    foreach($tree as $cat)
+    {
+        $items .= "\t";
+        $items .= "<li>"."\n";
+        $items .= "\t";
+        $items .= "\t";
+        if(!$cat->isLeaf()) $items .= Html::tag('span', $cat->name, ['class' => 'multi-column__title']); //загаловок категории
+        else $items .= Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //ссыЛка не категории
+        //*
+        if($max_level > 0 && !$cat->isLeaf()) {
+            $items .= treeMainItems($cat['children'], $max_level);
+        }
+
+        /**/
+        /*
+        if($max_level > 0 && !$cat->isLeaf()) {
+            echo "\n";
+            echo "\t";
+            echo $max_level;
+        echo "\t";
+            echo $cat->name;
+        echo "\t";
+            var_dump($cat->isLeaf());
+            echo "\n";
+            echo "\n";
+
+        //}
+        /**/
+        $items .= "\t";
+        $items .= "</li> \n";
+    }
+    $items .= "</ul>\n";
+    echo "<plaintext>" . $items . "</plaintext>";
+    exit();
+    //end NOcache items*/
+?>
+<nav class="transition--fade"> <!--nav--open и добавить высоту, дополнительные открываются при помощи active-->
+    <div class="nav-bar nav--absolute nav--transparent" data-fixed-at="200"> <!--nav--fixed class дополнительный-->
+        <div class="nav-module logo-module left">
+            <a href="index.html">
+                <img class="logo logo-dark" alt="logo" src="/img/tmp/logo-dark.png" />
+                <img class="logo logo-light" alt="logo" src="/img/tmp/logo-light.png" />
+            </a>
+        </div>
+        <div class="nav-module menu-module left">
+            <ul class="menu">
+                <li>
+                    <a href="/">
+                        Главная
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="collapse" data-parent="#top_menu" href="#collapseMenu_1">
+                        Категории товаров Первый вариант
+                    </a>
+                    <?=$items?>
+                </li>
+                <li>
+                    <a href="/site/about">
+                        О нас
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/contacts">
+                        Контакты
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!--end nav module-->
+        <div class="nav-module right">
+            <a href="#" class="nav-function" data-notification-link="cart-overview">
+                <i class="interface-bag icon icon--sm"></i>
+                <span>Корзина</span>
+            </a>
+        </div>
+        <div class="nav-module right">
+            <a href="#" class="nav-function modal-trigger" data-modal-id="search-form">
+                <i class="interface-search icon icon--sm"></i>
+                <span>Поиск</span>
+            </a>
+        </div>
+    </div>
+    <!--end nav bar-->
+    <div class="nav-mobile-toggle visible-sm visible-xs">
+        <i class="icon-Align-Right icon icon--sm"></i>
+    </div>
+</nav>
+
+
+
+
+
+
+
+
+11111111111111111111111111
+<?php
+/**
+ * Created by PhpStorm.
+ * User: straengel
+ * Date: 06.03.2017
+ * Time: 6:15
+ */
+use yii\helpers\Html;
+?>
+<?php //First
+	function treeMainItems($cat, $max_level) {
+		$max_level--;
+		$data = "";
+		if($max_level > 0) {
+			foreach($cat as $c){
+				if(!$c->isLeaf()) $data .= "<li >".Html::tag('span', $c->name, ['class' => 'multi-column__title']); //загаловок категории
+				else $data .= "<li >".Html::a($c->name,'/category/'.($c->seoTags->slug == null ? $c->id : $c->seoTags->slug), ['class' => '']); //ссыЛка не категории
+
+				if($max_level > 0) {
+					$data .= treeMainItems($c['children'], $max_level );
+				}
+				$data .= "</li>";
+			}
+		}
+		return $data;
+	}
+
+	$activeLink = isset(Yii::$app->params['breadcrumbs'][1]['url'][0]) ? Yii::$app->params['breadcrumbs'][1]['url'][0] : '';
+
+	if(empty($activeLink)) $activeLink = "/category/".Yii::$app->request->get("slug");
+
+	if($max_level == null) $max_level = 9999;
+
+
+    //* Cache items
+    $items = Yii::$app->cache->get('items');
+    if ($items === false) {
+        $items = "";
+        foreach($tree as $cat)
+        {
+            $items .= "<li>";
+            $items .= "<ul>";
+
+            if(!$cat->isLeaf()) $items .= "<li >".Html::tag('span', $cat->name, ['class' => 'multi-column__title']); //загаловок категории
+            else $items .= "<li >".Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //ссыЛка не категории
+
+            $items .= treeMainItems($cat['children'], $max_level);
+
+            $items .= "</ul>";
+            $items .= "</li>";
+        }
+        Yii::$app->cache->set('items', $items, 1000);
+    }
+	//var_dump($tree);
+	//exit();
+    // end cache items */
+    /* NOCache items
+    $items = "";
+    foreach($tree as $cat)
+    {
+        $items .= "<li>";
+        $items .= "<ul>";
+
+        if(!$cat->isLeaf()) $items .= "<li >".Html::tag('span', $cat->name, ['class' => 'multi-column__title']); //загаловок категории
+        else $items .= "<li >".Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //ссыЛка не категории
+
+        $items .= treeMainItems($cat['children'], $max_level);
+
+        $items .= "</ul>";
+        $items .= "</li>";
+    }
+    //end NOcache items*/
+?>
+
+<?php //second
+
+	function treeMainitems1($cat, $max_level) {
+		$max_level--;
+		$data = "";
+		if($max_level > 0) {
+			foreach($cat as $c){
+				if($max_level > 0) {
+					if(!$c->isLeaf()) {
+						$data .= "<li class='dropdown'>".Html::a($c->name,'/category/'.($c->seoTags->slug == null ? $c->id : $c->seoTags->slug), ['class' => '']); //загаловок категории
+						$data .= "<ul>";
+						$data .= treeMainitems1($c['children'], $max_level);
+						$data .= "</ul>";
+						$data .= "</li>";
+					} else {
+						$data .= "<li >".Html::a($c->name,'/category/'.($c->seoTags->slug == null ? $c->id : $c->seoTags->slug), ['class' => '']); //ссыЛка не категории
+					}
+				} else {
+					$data .= "<li >".Html::a($c->name,'/category/'.($c->seoTags->slug == null ? $c->id : $c->seoTags->slug), ['class' => '']); //ссыЛка не категории
+				}
+			}
+		}
+		return $data;
+	}
+
+    //* Cache
+    $items1 = Yii::$app->cache->get('items1');
+    if ($items1 === false) {
+        $items1 = "";
+        foreach($tree as $cat)
+        {
+            if(!$cat->isLeaf()) {
+                $items1 .= "<li class='dropdown'>".Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //загаловок категории
+                $items1 .= "<ul>";
+                $items1 .= treeMainitems1($cat['children'], $max_level);
+                $items1 .= "</ul>";
+                $items1 .= "</li>";
+            } else {
+                $items1 .= "<li >".Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //ссыЛка не категории
+            }
+        }
+        Yii::$app->cache->set('items1', $items1, 1000);
+    }
+    // end cache items1 */
+    /* no cache
+    $items1 = "";
+    foreach($tree as $cat)
+    {
+        if(!$cat->isLeaf()) {
+            $items1 .= "<li class='dropdown'>".Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //загаловок категории
+            $items1 .= "<ul>";
+            $items1 .= treeMainitems1($cat['children'], $max_level);
+            $items1 .= "</ul>";
+            $items1 .= "</li>";
+        } else {
+            $items1 .= "<li >".Html::a($cat->name,'/category/'.($cat->seoTags->slug == null ? $cat->id : $cat->seoTags->slug), ['class' => '']); //ссыЛка не категории
+        }
+    }
+    /* no cache */
+
+?>
+<nav class="transition--fade"> <!--nav--open и добавить высоту, дополнительные открываются при помощи active-->
+    <div class="nav-bar nav--absolute nav--transparent" data-fixed-at="200"> <!--nav--fixed class дополнительный-->
+        <div class="nav-module logo-module left">
+            <a href="index.html">
+                <img class="logo logo-dark" alt="logo" src="/img/tmp/logo-dark.png" />
+                <img class="logo logo-light" alt="logo" src="/img/tmp/logo-light.png" />
+            </a>
+        </div>
+        <div class="nav-module menu-module left">
+            <ul class="menu">
+                <li>
+                    <a href="/">
+                        Главная
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Категории товаров Первый вариант
+                    </a>
+					<ul class="multi-column">
+						<?=$items?>
+					</ul>
+                </li>
+				<li>
+                    <a href="#">
+                        Категории товаров Второй вариант
+                    </a>
+					<ul class="">
+						<?=$items1?>
+					</ul>
+				</li>
+                <li>
+                    <a href="/site/about">
+                        О нас
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/contacts">
+                        Контакты
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!--end nav module-->
+        <div class="nav-module right">
+            <a href="#" class="nav-function" data-notification-link="cart-overview">
+                <i class="interface-bag icon icon--sm"></i>
+                <span>Корзина</span>
+            </a>
+        </div>
+        <div class="nav-module right">
+            <a href="#" class="nav-function modal-trigger" data-modal-id="search-form">
+                <i class="interface-search icon icon--sm"></i>
+                <span>Поиск</span>
+            </a>
+        </div>
+    </div>
+    <!--end nav bar-->
+    <div class="nav-mobile-toggle visible-sm visible-xs">
+        <i class="icon-Align-Right icon icon--sm"></i>
+    </div>
+</nav>

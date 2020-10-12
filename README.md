@@ -1,2 +1,9 @@
-# apfy-All-Presents-For-You-
-Проект интернет магазина apfy.ru (All Presents For You)
+##Проект интернет магазина apfy.ru (All Presents For You)
+
+
+**Наработки по коду и по мелочи и даже не самые удачные зачастую**
+
+**Настройки конфигов**
+- elastic
+- nginx
+- php

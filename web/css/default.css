@@ -1,0 +1,288 @@
+/*
+@media(min-width: 300px){
+
+}
+*/
+/*general*/
+/*outline none*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.form-default a,
+.form-default button,
+.form-default textarea,
+.form-default select,
+a,
+button,
+textarea,
+select {
+    text-decoration: none;
+    outline: none !important;
+    text-decoration: none;
+    border: none;
+}
+input {
+    text-decoration: none;
+    text-decoration: none;
+    outline: none !important;
+}
+a:hover, a:focus {
+    outline: none !important;
+    text-decoration: none;
+    /* color: #fff; */
+}
+
+
+/*flexs*/
+.rootFlex {
+    display: -webkit-flex;
+    /* Safari */
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-align-content: flex-start;
+    align-content: flex-start;
+    width: 100%;
+}
+/*Выравнивание слева направа или сверху вниз или наоборот*/
+/*слева на права*/
+.flexDirectionRow {
+    -webkit-flex-direction: row;
+    flex-direction: row;
+}
+/*справа на лево*/
+.flexDirectionRowRevers {
+    -webkit-flex-direction: row-reverse;
+    flex-direction: row-reverse;
+}
+/*сверху вниз*/
+.flexDirectionColumn {
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+/*снизу вверх*/
+.flexDirectionColumnReverse {
+    -webkit-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+}
+/*Выравнивание по горизонтали элементов*/
+.flexJustifyAround {
+    -webkit-justify-content: space-around !important;
+    justify-content: space-around !important;
+}
+
+.flexJustifyStart {
+    -webkit-justify-content: flex-start !important;
+    justify-content: flex-start !important;
+}
+
+/*Выравнивание по вертикали элементов*/
+.flexAlignItemsStart {
+    -webkit-align-items: flex-start !important;
+    align-items: flex-start !important;
+}
+
+.flexAlignItemsEnd {
+    -webkit-align-items: flex-end !important;
+    align-items: flex-end !important;
+}
+
+/*Выравнивание по вертикали ???*/
+.flexContentStart {
+    -webkit-align-content: flex-start !important;
+    align-content: flex-start !important;
+}
+
+.flextest {
+    -webkit-align-items: center !important;
+    -webkit-box-align: center !important;
+    -ms-flex-align: center !important;
+    align-items: center !important;
+}
+
+/*Принужденное выравнивания по вертикали блока*/
+.autoMiddelVertical {
+    top: 50%;
+    position: relative;
+}
+
+/*form*/
+.defaultField input,
+.defaultField textarea {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background: #fff;
+    outline: none !important;
+    width: 100%;
+    color: #000;
+    border: 1px solid #dad7d7;
+    padding: 0 14px
+}
+
+.defaultFieldInput input,
+.defaultFieldSelect select {
+    line-height: 40px;
+}
+
+.defaultFieldTextarea textarea {
+    color: #bebdbd;
+    padding: 10px 15px;
+    resize: none;
+    min-height: 92px;
+}
+
+/*placeholder*/
+.defaultField input::placeholder,
+.defaultField textarea::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #bebdbd;
+}
+
+.defaultField input::-ms-input-placeholder,
+.defaultField textarea:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #bebdbd;
+}
+
+.defaultField input::-ms-input-placeholder,
+.defaultField textarea::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #bebdbd;
+}
+
+/*select*/
+.defaultFieldSelect,
+.defaultFieldSelect select {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.defaultFieldSelect {
+    width: 100%;
+    height: 42px;
+    line-height: 40px;
+    background-color: #fff;
+    position: relative;
+    cursor: pointer;
+}
+
+.defaultFieldSelect select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    height: 100%;
+    background: none;
+    padding: 0 14px;
+    border: 1px solid #dad7d7;
+}
+
+/*разделительная черта*/
+.defaultFieldSelect:before {
+    display: none !important;
+}
+
+.defaultFieldSelect:before {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 42px;
+    right: 30px;
+    background-color: #ccc;
+    pointer-events: none;
+    position: absolute;
+    top: 1px;
+    z-index: 1;
+}
+
+/*стрелочка*/
+.defaultFieldSelect:after {
+    content: "";
+    pointer-events: none;
+    z-index: 1;
+    position: absolute;
+    top: 19px;
+    right: 14px;
+    background: url("../img/choose.png") no-repeat center center;
+    width: 10px;
+    height: 7px;
+
+}
+
+/* Убираем стандартные стрелочки в IE */
+.defaultFieldSelect select::-ms-expand {
+    display: none;
+}
+
+.defaultFieldSelect select:focus {
+    outline: 0;
+    border-color: #2cb0d8;
+}
+
+.defaultFieldSelect select:hover {
+    cursor: pointer;
+}
+
+/*Upload File*/
+.defaultFieldFileUpload {
+    position: relative;
+    /* Даем возможность делать позиционирование, внутри данного элемента */
+    overflow: hidden;
+    /* Все что выходит за пределы - скрываем */
+    width: 100%;
+    /* Задаем ширину кнопки выбора файла */
+    max-width: 180px;
+    height: 30px;
+    /* Задаем высоту кнопки выбора файла */
+    line-height: 30px;
+    background: none;
+    color: #fff;
+    text-align: left;
+}
+
+.defaultFieldFileUpload input[type="file"] {
+    display: none;
+    /* Обязательно скрываем настоящий Input File */
+}
+
+.defaultFieldFileUploadLabel {
+    /* Растягиваем label на всю возможную площадь блока .defaultFieldFileUpload */
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.defaultFieldFileUploadLabel:before {
+    content: '';
+    display: inline-block;
+    background: url(../img/to_attach.png) no-repeat center center;
+    width: 35px;
+    height: 27px;
+    position: relative;
+    margin-right: 10px;
+    top: 2px;
+}
+
+.defaultFieldFileUploadName {
+    line-height: 14px;
+    position: relative;
+    display: inline-block;
+    top: -4px;
+    font-weight: 400;
+    border-bottom: 1px solid #c7e1fb;
+    font-size: 16px
+}

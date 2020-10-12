@@ -1,0 +1,73 @@
+<?php
+
+use yii\helpers\Html;
+use yii\grid\GridView;
+use yii\bootstrap\Modal;
+/* @var $this yii\web\View */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = 'Атрибуты товаров';
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="attribute-product-index">
+    <p>
+        <?= Html::a(
+			'Создать атрибут для товара', 
+			null, //['create'], 
+			[
+				'class' => 'btn btn-success showModalButton', 
+				'value' => '/root/shop/product_attribute/create',
+				'title' => 'Создать атрибут для товара'
+			]
+		) ?>
+    </p>
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            //['class' => 'yii\grid\SerialColumn'],
+
+            'id',
+            'name',
+            //'value',
+            //'id_product',
+            //'user_id',
+
+            [
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{update} {delete}',
+            'buttons' => [
+                'update' => function ($url,$model) {
+					$link = Html::a(
+						'<span class="glyphicon glyphicon-pencil"></span>', 
+						null,
+						[
+							'value' => $url,
+							'title' => 'Изменить название атрибута',
+							'class' => 'showModalButton',
+						]
+					);
+				   return $link;
+                },
+				/*
+                'delete' => function ($url,$model) {
+                    return Html::a(
+                    '<span class="glyphicon glyphicon-trash"></span>', 
+                    $url);
+                },
+				//*/
+            ],
+        ],
+        ],
+    ]); ?>
+</div>
+
+<?php
+yii\bootstrap\Modal::begin([
+    'headerOptions' => ['id' => 'modalHeader', ],
+    'id' => 'modal',
+    'size' => 'modal-lg',
+    'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
+]);
+echo "<div id='modalContent'></div>";
+yii\bootstrap\Modal::end();
+?>

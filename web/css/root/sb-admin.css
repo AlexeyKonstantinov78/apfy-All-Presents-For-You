@@ -1,0 +1,443 @@
+/*!
+ * Start Bootstrap - SB Admin Bootstrap Admin Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+/* Global Styles */
+/*general style*/
+.tbl {display: table}
+.tbc {display: table-cell}
+body {
+    margin-top: 50px;
+    background-color: #222;
+}
+@media(min-width:300px) {
+    .nav > li > a {
+        padding: 15px 10px !important;
+    }
+    .top-nav>li {
+        display: block;
+        float: none;
+        width:100%;
+    }
+    .navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
+        max-height: calc(100vh - 50px) !important;
+        height: calc(100vh - 50px);
+    }
+    .right-filter {
+        border-right:none;
+        margin-right:0;
+        margin-left:0;
+        padding-right: 5px;
+    }
+    .filter_admin .panel-heading {
+        float: none;
+    }
+}
+@media(min-width:500px) {
+    .filter_admin .panel-heading {
+        float: right;
+    }
+}
+@media(min-width:768px) {
+    body {
+        margin-top: 50px;
+    }
+    .top-nav>li {
+        display: inline-block;
+        float: left;
+        width:auto;
+    }
+    .navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
+        height: auto;
+        max-height: 340px !important;
+    }
+    .right-filter {
+        border-right:1px solid #eee;
+        margin-right:-15px;
+        margin-left:-15px;
+    }
+    .filter_admin .panel-heading {
+        float:none
+    }
+}
+@media(min-width:992px) {
+    .nav > li > a {
+        padding: 15px 15px !important;
+    }
+    .filter_admin .panel-heading {
+        float:right
+    }
+}
+
+#wrapper {
+    padding-left: 0 !important;
+}
+
+#page-wrapper {
+    width: 100%;
+    padding: 0;
+    background-color: #fff;
+}
+
+.huge {
+    font-size: 50px;
+    line-height: normal;
+}
+
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 225px;
+    }
+
+    #page-wrapper {
+        padding: 10px;
+    }
+}
+
+/* Top Navigation */
+.navbar-inverse .navbar-nav .active a{
+    color: #fff;
+    background-color: #080808;
+}
+.forms-label-admin.navbar-form {
+	margin: 0;
+	padding: 10px 0px;
+}
+.forms-label-admin button{
+	display: block;
+    padding: 3px 20px;
+    clear: both;
+    width:100%;
+    text-align: left !important;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333 !important;
+	text-decoration:none !important;
+}
+.forms-label-admin button:hover {
+	color: #262626 !important;
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+.top-nav {
+    padding: 0 15px;
+}
+
+
+.top-nav>li>a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    line-height: 20px;
+    color: #999;
+}
+
+.top-nav>li>a:hover,
+.top-nav>li>a:focus,
+.top-nav>.open>a,
+.top-nav>.open>a:hover,
+.top-nav>.open>a:focus {
+    color: #fff;
+    background-color: #000;
+}
+
+.top-nav>.open>.dropdown-menu {
+    float: left;
+    position: absolute;
+    margin-top: 0;
+    border: 1px solid rgba(0,0,0,.15);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background-color: #fff;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    min-width: 300px;
+}
+
+.top-nav>.open>.dropdown-menu>li>a {
+    white-space: normal;
+}
+
+ul.message-dropdown {
+    padding: 0;
+    max-height: 250px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+li.message-preview {
+    width: 275px;
+    border-bottom: 1px solid rgba(0,0,0,.15);
+}
+
+li.message-preview>a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+li.message-footer {
+    margin: 5px 0;
+}
+
+ul.alert-dropdown {
+    width: 200px;
+}
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    background-color:#f5f5f5 !important;
+    color:#333 !important;
+}
+/* Side Navigation */
+
+@media(min-width:768px) {
+    .side-nav {
+        position: fixed;
+        top: 51px;
+        left: 225px;
+        width: 225px;
+        margin-left: -225px;
+        border: none;
+        border-radius: 0;
+        overflow-y: auto;
+        background-color: #222;
+        bottom: 0;
+        overflow-x: hidden;
+        padding-bottom: 40px;
+    }
+
+    .side-nav>li>a {
+        width: 225px;
+    }
+
+    .side-nav li a:hover,
+    .side-nav li a:focus {
+        outline: none;
+        background-color: #000 !important;
+    }
+}
+
+.side-nav>li>ul {
+    padding: 0;
+}
+
+.side-nav>li>ul>li>a {
+    display: block;
+    padding: 10px 15px 10px 38px;
+    text-decoration: none;
+    color: #999;
+}
+
+.side-nav>li>ul>li>a:hover {
+    color: #fff;
+}
+
+/* Flot Chart Containers */
+
+.flot-chart {
+    display: block;
+    height: 400px;
+}
+
+.flot-chart-content {
+    width: 100%;
+    height: 100%;
+}
+
+/* Custom Colored Panels */
+.nav>li {
+	display: inline-block !important
+}
+.huge {
+    font-size: 40px;
+}
+
+.panel-green {
+    border-color: #5cb85c;
+}
+
+.panel-green > .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-green > a {
+    color: #5cb85c;
+}
+
+.panel-green > a:hover {
+    color: #3d8b3d;
+}
+
+.panel-red {
+    border-color: #d9534f;
+}
+
+.panel-red > .panel-heading {
+    border-color: #d9534f;
+    color: #fff;
+    background-color: #d9534f;
+}
+
+.panel-red > a {
+    color: #d9534f;
+}
+
+.panel-red > a:hover {
+    color: #b52b27;
+}
+
+.panel-yellow {
+    border-color: #f0ad4e;
+}
+
+.panel-yellow > .panel-heading {
+    border-color: #f0ad4e;
+    color: #fff;
+    background-color: #f0ad4e;
+}
+
+.panel-yellow > a {
+    color: #f0ad4e;
+}
+
+.panel-yellow > a:hover {
+    color: #df8a13;
+}
+/*still style*/
+/*setting blocks*/
+.settings-form .tab-pane {
+	margin-top: 15px;
+	margin-bottom: 15px
+}
+.settings-form .nav > li > a {
+	padding: 11px 15px 11px;
+}
+/*maps*/
+.maps {
+	margin-top: 15px;
+	margin-bottom: 15px
+}
+.maps .form-group {
+	margin-bottom: 15px
+}
+.form_map {
+	display: table;
+	width: 100%;
+}
+.form_map>input.form-control {
+	display: table-cell;
+	width: 100%;
+}
+.form_map label {	
+	display: table-cell;
+	width: 100px;
+}
+.search_map {
+	vertical-align: sub;
+}
+
+table.fancytree-ext-table tbody tr.fancytree-active {
+    background-color: #5094CE; 
+}
+
+*:focus {
+    outline: none;
+}
+
+.navbar-toggle {
+    position: relative;
+    float: right;
+    padding: 9px 10px;
+    margin-top: 8px;
+    margin-right: 15px;
+    margin-bottom: 8px;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.product-form .nav-tabs  > li{
+	margin-bottom: -2px;
+}
+.product-form .nav-tabs {
+	margin-bottom:10px;
+}
+#attr .form-inline  input[type=text]{
+	min-width:50%;
+}
+#attr .form-inline  .control-label {
+	text-align: right;
+}
+.form-table-admin .tbl label, .form-table-admin .tbl input { display: table-cell}
+.form-table-admin .tbl label {width: 20%; padding-right: 15px;}
+.form-table-admin .tbl input {max-width: 80%}
+.form-table-admin .tbl {
+    width: 100%;
+    margin: 6px 0;
+}
+.view-table .row:nth-child(even) {
+    background: #F9F9F9;
+}
+.view-table .row {
+    border-bottom: 1px solid #DDD;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.view-table .row:first-child {
+    background: #EDF4F9;
+}
+.arrow_elements {
+	color: #337ab7;
+	margin-left: 3px;
+	margin-right: 3px; 
+}
+.arrow_elements:hover, .arrow_elements:focus {
+	color: #23527c;
+	cursor: pointer;
+}
+/*images product*/
+.th_image img {
+	width: 100px;
+}
+.tr_images th {
+	padding: 10px;
+}
+.del_img{
+	margin-bottom: 10px;
+}
+/*fields*/
+.feild_iniline {
+	display:inline-block;
+	margin-right:20px
+}
+#settings-fields div.feedback_field {
+	padding-top: 20px;
+	border-top: 1px solid #eee;
+}
+#settings-fields{
+	margin-top: 30px;
+}
+/*filter for somethink*/
+.filter_admin ul {
+     padding:0 0 0 15px;
+     margin:0;
+}
+.filter_admin ul li{
+    padding:0 0 0 10px;
+    margin:0;
+}
+.filter_admin ul li a {
+    transition: 0.2s linear;
+    -webkit-transition: 0.2s linear;
+    -moz-transition: 0.2s linear;
+    color:#000;
+    opacity: .6;
+    text-decoration: none !important;
+    display: inline-block;
+    padding: 5px
+}
+.filter_admin ul li a:hover, .filter_admin ul li a.active {
+    opacity: 1;
+}

@@ -1,0 +1,17 @@
+# Типовые настройки общие для всех доменов (если не захочется экзотики)
+##
+index index.php index.html;
+
+# Реализуем "красивые" ссылки для Drupal (и для ряда других CMS)
+location / {
+	try_files $uri $uri/ /index.php?$args; 
+}
+
+# Закрываем доступ к файлами .htaccess и .htpassword
+location ~ /\.ht {
+	deny all;
+}
+location = /favicon.ico {
+	log_not_found off;
+	access_log off;
+}

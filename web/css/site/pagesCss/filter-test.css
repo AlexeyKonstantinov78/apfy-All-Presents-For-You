@@ -1,0 +1,160 @@
+/*filter*/
+#asideFilters {
+    margin-bottom: 30px;
+}
+.asideFilter {
+    margin-bottom: 15px;
+    padding: 5px 15px;
+    /*background: #f5f5f5;*/
+    background: rgba(240,222,134,1);
+}
+.asideFilter .h4 {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: inherit;
+    margin-bottom: 10px;
+}
+.asideFilter .asideFilterParametr {
+    display: none;
+}
+.asideFilter.active .asideFilterParametr {
+    display: block;
+}
+.asideFilterParametr label {
+    max-width: 84%;
+    font-size: 14px;
+}
+.asideFilter.active .caret {
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.asideFilterPrice input {
+    display: inline-block;
+    width: 86px;
+    text-align: center;
+    line-height: 24px;
+    border: 1px solid #adadad;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #fff;
+    font-size: 14px;
+    color: #000;
+}
+.asideFilter .caret {
+    color: #7a7a7a;
+    margin: 9px 0 0;
+    position: relative;
+    top: -1px;
+    float: right !important;
+}
+.asideFilterPriceMore {
+    color: #767676;
+    font-size: 12px;
+}
+.asideFilter .ui-widget-header,
+.asideFilter .ui-widget.ui-widget-content {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+.asideFilter .ui-widget.ui-widget-content {
+    border: none;
+    background: #dcdcdc;
+    height: 4px;
+}
+.asideFilter .ui-widget-header {
+    background: #767676;
+}
+.asideFilter .ui-state-default,
+.asideFilter .ui-widget-content .ui-state-default,
+.asideFilter .ui-widget-header .ui-state-default,
+.asideFilter .ui-button,
+html .asideFilter .ui-button.ui-state-disabled:hover,
+html .asideFilter .ui-button.ui-state-disabled:active {
+    border: none;
+    background-repeat: no-repeat;
+    background-position: center center;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    background-color: transparent;
+    outline: none !important;
+    cursor: pointer;
+    top: -8px;
+}
+.asideFilter .ui-slider .ui-slider-handle {
+    width: 1.2em;
+    height: 1.2em;
+}
+div#sliderMaxMin span:nth-child(2) {
+    background-image: url('/img/site/icons/uiLeft.png');
+}
+div#sliderMaxMin span:nth-child(3) {
+    background-image: url('/img/site/icons/uiRight.png');
+}
+.asideFilterChekboxSmall .checkbox {
+    width: 50%;
+    float: left;
+    font-size: 14px;
+}
+.asideFilter .checkbox {
+    margin: 0 0 15px;
+}
+.checkboxQuant {
+    width: 30px;
+    line-height: 22px;
+    font-size: 12px;
+    display: inline-block;
+    color: #767676;
+    text-align: center;
+    background: rgba(198,0,108,0.07)
+}
+.checkboxQuant:hover {
+    background: #c6006c;
+    color:#fff;
+}
+.asideFilterButton {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    line-height: 30px;
+    text-align: center;
+    outline: none !important;
+}
+@media (min-width: 300px){
+    #applyFilters {
+        float:right
+    }
+    .asideFilterButton {
+        display: inline-block;
+        width: 110px;
+        margin: 0;
+    }
+    #asideFilters {
+        display: block;
+    }
+}
+@media (min-width: 768px) {
+    #asideFilters {
+        display: block;
+    }
+}
+@media (min-width: 992px) {
+    .asideFilterButton {
+        display: inline-block;
+        width: 110px;
+        margin: 0;
+    }
+    #applyFilters {
+        float:left
+    }
+    #resetFilters {
+        float:right
+    }
+}
+/*end filter*/

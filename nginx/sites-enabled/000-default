@@ -1,0 +1,6 @@
+server {
+	listen 80;
+	server_name 92.53.124.35;
+	include /etc/nginx/templates/phpad;
+	#return 301 https://apfy.ru$request_uri;
+}

@@ -1,0 +1,279 @@
+/*cabinet_nav*/
+.cabinet_nav_link {
+    color:#010101 !important;
+    background: transparent;
+    border: none !important;
+    font-size: 14px;
+    width: 100%;
+    display: block !important;
+    text-decoration: none !important;
+}
+.cabinet_nav_link:hover,
+.cabinet_nav_link.cabinet_active {
+    background: #e8d577;
+    color:#010101;
+}
+@media(min-width: 300px){
+    .cabinet_nav_link {
+        line-height: 44px;
+        padding: 0 20px;
+        margin-bottom: 10px;
+    }
+}
+@media(min-width: 992px){
+
+}
+/*end cabinet_nav*/
+
+/*registration*/
+.registr-wrapper {
+    max-width: 100%;
+    width: 695px;
+    margin: 0 auto;
+}
+#registr .label-terms_of_use {
+    line-height: 16px;
+}
+#registr .terms_of_use {
+    font-size: 13px;
+    font-weight: 400;
+}
+.label-terms_of_use {
+    line-height: 16px;
+}
+#users-terms_of_use {
+    position: relative;
+    bottom: -3px;
+}
+#registr .form-control {
+    line-height: 34px;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+#registr .form-control,
+#registr .help-block {
+    font-size: 12px;
+}
+#registr button.red_but_font_filt.return--pass {
+    line-height: 38px !important;
+    font-weight: 300;
+}
+@media(min-width: 300px){
+    #registr .form-group {
+        margin-bottom: 12px !important;
+    }
+    #registr .form-group.has-error {
+        margin-bottom: 12px !important;
+    }
+    #registr button.red_but_font_filt.return--pass {
+        max-width: 100%;
+        width: 320px;
+    }
+}
+@media(min-width: 768px){
+    #registr .form-group {
+        margin-bottom: 33px !important;
+    }
+    #registr .form-group.has-error {
+        margin-bottom: 12px !important;
+    }
+}
+/*end registration*/
+/*auth*/
+#auth .auth-from {
+    max-width: 100%;
+}
+#auth .auth-link {
+    color:#ac1068;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 2px dashed transparent;
+    font-size: 12px;
+    font-weight: 600 !important;
+}
+#auth .auth-link:hover,
+#auth .auth-link:focus,
+#auth .auth-link:active {
+    border-bottom: 2px dashed #ac1068;
+    color:#ac1068;
+}
+#auth .auth-from_input input.form-control::-webkit-input-placeholder,
+#registr input.form-control::-webkit-input-placeholder {
+    color:#141516 !important;
+}
+#registr input.form-control::-moz-placeholder,
+#auth .auth-from_input input.form-control::-moz-placeholder {
+    color:#141516 !important;
+}
+#registr input.form-control:-moz-placeholder,
+#auth .auth-from_input input.form-control:-moz-placeholder {
+    color:#141516 !important;
+}
+#registr input.form-control:-ms-input-placeholder,
+#auth .auth-from_input input.form-control:-ms-input-placeholder {
+    color:#141516 !important;
+}
+.auth-reg .h4 {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+.auth-reg i.fa {
+    display: inline-block;
+    margin-left: 46px;
+}
+.auth-reg_ul {
+    padding-left: 10px;
+    list-style-type: none;
+}
+.auth-reg_ul li {
+    padding: 0;
+    margin: 0 0 10px;
+    font-size: 12px;
+    position: relative;
+}
+.auth-reg_ul li:after {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 3px;
+    background: #9c9c8d;
+    top: 8px;
+    left: -10px;
+}
+
+#auth a.auth-reg_link {
+    font-size: 13px;
+    line-height: 38px !important;
+    width: 220px;
+    display: inline-block;
+    font-weight: 600 !important;
+}
+/*#auth .auth-from_input input.form-control:focus {
+    border-color: #f0de86
+}*/
+@media(min-width: 300px){
+    main {
+        margin-top: 90px;
+    }
+    #auth .auth-from {
+        padding-right: 0;
+        width: 100%;
+        border-right: none;
+    }
+    #auth .rootFlex .auth-block {
+        min-height: 160px;
+        width: 100%;
+    }
+    #auth .auth-from_input .form-group {
+        margin-bottom: 12px !important;
+    }
+    #auth .auth-from_input .form-group.has-error {
+        margin-bottom: 12px !important;
+    }
+    #auth .auth-from_input input {
+        line-height: 38px !important;
+        height: auto;
+        font-size: 13px;
+        padding: 0 14px;
+    }
+    #auth .auth-from_input .form-group .help-block {
+        font-size: 12px;
+    }
+    #auth .auth-from_input button {
+        width: 190px;
+        line-height: 38px !important;
+    }
+    .auth-link {
+        margin-top: 25px;
+    }
+    .auth-reg {
+        margin-left: 0;
+        margin-top: 30px;
+    }
+}
+@media(min-width: 768px){
+    main {
+        margin-top: 200px;
+    }
+    #auth .auth-from_input .form-group {
+        margin-bottom: 34px !important;
+    }
+    #auth .auth-from_input .form-group.has-error {
+        margin-bottom: 12px !important;
+    }
+    #auth .rootFlex .auth-block {
+        min-height: 160px;
+        width: auto;
+    }
+    #auth .auth-from {
+        padding-right: 50px;
+        width: 300px;
+        border-right: 1px solid #cccccc;
+    }
+    .auth-link {
+        margin-top: 25px;
+    }
+    .auth-reg {
+        margin-left: 100px;
+        margin-top: 0;
+    }
+}
+@media(min-width: 768px) {
+    main {
+        margin-top: 170px;
+    }
+}
+
+/*orderHistory*/
+
+.grid-view .summary {
+    margin-bottom: 15px;
+}
+#history-table .history-column>td {
+    vertical-align: middle;
+}
+.history-column_total:after {
+    content: ' руб.';
+}
+.history-column_header {
+    background-color: rgba(232, 213, 119, 0.2);
+}
+.table-striped > tbody > tr.history-column:nth-of-type(odd){
+    background-color: rgba(232, 213, 119, 0.4) ;
+}
+.history-column:hover {
+    background-color: rgba(232, 213, 119, 1) !important;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    border-color: rgba(232, 213, 119, 1);
+}
+.grid-view>ul.pagination {
+    display: none !important;
+}
+
+.history-view .h2 {
+    font-size: 20px !important;
+}
+.history-view_td-th {
+    line-height: 36px;
+    background-color: rgba(232, 213, 119, 0.2);
+}
+.history-view_td {
+    line-height: 20px;
+}
+.history-view_td:nth-of-type(odd) {
+    background-color: rgba(232, 213, 119, 0.4);
+}
+.history-view_table {
+    font-size: 14px !important;
+}
+.history-view_details {
+    line-height: 36px;
+}
+/*end orderHistory*/

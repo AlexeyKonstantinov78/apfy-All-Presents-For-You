@@ -1,0 +1,43 @@
+#item_images img{cursor:pointer}
+#item_image{width:100%;text-align:center;margin-bottom:10px}
+#item_image img{max-width:100%;max-height:100%;display:inline-block}
+#item_images .owl-carousel{display:block!important}
+#item_images .owl-carousel .item_img{text-align:center}
+#item_images .owl-carousel .item_img img{vertical-align:middle;max-height:100%;max-width:100%;width:auto!important;display:inline-block!important}
+#item_images .owl-carousel .item_img{width:100%;margin:5px auto;padding:4px;-webkit-box-shadow:0 0 4px 1px rgba(0,0,0,0.1);-moz-box-shadow:0 0 4px 1px rgba(0,0,0,0.1);box-shadow:0 0 4px 1px rgba(0,0,0,0.1)}
+#item_images .owl-carousel .owl-item .item_img{max-width:100%;width:calc(100% - 20px);margin:5px 10px}
+#item article{margin-top:10px}
+#item .info{margin-top:25px;font-size:13px;line-height:20px}
+#item .info b{font-weight:700}
+#item .item_price{font-weight:600}
+#item .input_panel{margin-top:5px}
+.attributes{font-size:13px}
+@media (min-width: 300px) {
+    #item_image{display:none!important}
+    #item_image img{cursor:default}
+    #item_images .owl-carousel .item_img{max-width:100%;height:260px;line-height:260px}
+    #item_images .owl-carousel .item_img img{max-height:230px}
+    #item_images .owl-carousel .owl-nav{margin-top:-30px}
+    .item_info_block .owl-carousel .owl-nav{margin-top:-60px}
+    #item_image{height:260px;line-height:260px}
+    #item .item_price{font-size:34px}
+    #item .item_price .item_price_number{font-size:42px;font-weight:700}
+    #item .item_info_block{margin-top:30px}
+    #item article{font-size:13px}
+}
+@media (min-width: 768px) {
+    #item_images .owl-carousel .owl-nav{margin-top:-30px}
+    .item_info_block .owl-carousel .owl-nav{margin-top:-60px}
+    #item_image{height:300px;line-height:300px}
+    #item .item_price{font-size:28px}
+    #item .item_price .item_price_number{font-size:36px}
+    #item .item_info_block{margin-top:40px}
+}
+@media (min-width: 992px) {
+    #item_image img{cursor:pointer}
+    #item_image{height:380px;line-height:380px;display:block!important}
+    #item_images .owl-carousel .item_img{max-width:160px;line-height:110px;height:110px}
+    #item .item_info_block{margin-top:60px}
+    #item article{font-size:15px}
+    #item_images .owl-carousel .owl-item.center .item_img{background:#f2e08a;background:-moz-linear-gradient(left,#f2e08a 0%,#cdb545 100%);background:-webkit-linear-gradient(left,#f2e08a 0%,#cdb545 100%);background:linear-gradient(to right,#f2e08a 0%,#cdb545 100%)}
+}
